@@ -1,0 +1,50 @@
+<!-- templates/book_appointment.html -->
+{% extends "base.html" %}
+
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center py-8">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h2 class="text-3xl font-bold text-center text-blue-700 mb-6">Book New Appointment</h2>
+        <form method="POST" action="{{ url_for('book_appointment') }}">
+            <div class="mb-4">
+                <label for="doctor_id" class="block text-gray-700 text-sm font-bold mb-2">Select Doctor:</label>
+                <select id="doctor_id" name="doctor_id" required
+                        class="shadow-sm border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                    <option value="">-- Choose a Doctor --</option>
+                    {% for doctor in doctors %}
+                        <option value="{{ doctor.user_id }}">{{ doctor.full_name }} ({{ doctor.specialty }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="appointment_date" class="block text-gray-700 text-sm font-bold mb-2">Appointment Date:</label>
+                <input type="date" id="appointment_date" name="appointment_date" required
+                       min="{{ today }}"
+                       class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+            </div>
+            <div class="mb-4">
+                <label for="appointment_time" class="block text-gray-700 text-sm font-bold mb-2">Appointment Time:</label>
+                <input type="time" id="appointment_time" name="appointment_time" required
+                       class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+            </div>
+            <div class="mb-6">
+                <label for="reason" class="block text-gray-700 text-sm font-bold mb-2">Reason for Appointment (Optional):</label>
+                <textarea id="reason" name="reason" rows="4"
+                          class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder="e.g., General check-up, specific symptoms, follow-up..."></textarea>
+            </div>
+            <div class="flex items-center justify-between">
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-105">
+                    Book Appointment
+                </button>
+                <a href="{{ url_for('patient_dashboard') }}" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

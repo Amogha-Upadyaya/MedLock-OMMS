@@ -1,0 +1,121 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Medical Management System - {% block title %}{% endblock %}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy: '#1a237e',
+          purple: '#6a1b9a'
+        }
+      }
+    }
+  };
+</script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #374151; /* Dark gray text */
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .flash-message {
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+        }
+        .flash-message.success {
+            background-color: #d1fae5; /* Green light */
+            color: #065f46; /* Green dark */
+            border: 1px solid #34d399;
+        }
+        .flash-message.danger {
+            background-color: #fee2e2; /* Red light */
+            color: #991b1b; /* Red dark */
+            border: 1px solid #ef4444;
+        }
+        .flash-message.info {
+            background-color: #e0f2fe; /* Blue light */
+            color: #1d4ed8; /* Blue dark */
+            border: 1px solid #60a5fa;
+        }
+        .flash-message.warning {
+            background-color: #fffbeb; /* Yellow light */
+            color: #92400e; /* Yellow dark */
+            border: 1px solid #fbbf24;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <nav class="bg-blue-600 p-4 shadow-md">
+        <div class="container flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="text-white text-2xl font-bold rounded-md px-3 py-1 hover:bg-blue-700 transition-colors">
+                <i class="fas fa-stethoscope"></i> MedLock
+            </a>
+            <div class="flex items-center space-x-4">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md transition-colors">Dashboard</a>
+                    <a href="{{ url_for('messages') }}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md transition-colors">Messages</a>
+                    <span class="text-white px-3 py-2">Hello, {{ current_user.username }}!</span>
+                    <a href="{{ url_for('logout') }}" class="bg-white text-blue-600 px-4 py-2 rounded-md shadow-sm hover:bg-gray-100 transition-colors font-medium">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md transition-colors">Login</a>
+                    <a href="{{ url_for('register') }}" class="bg-white text-blue-600 px-4 py-2 rounded-md shadow-sm hover:bg-gray-100 transition-colors font-medium">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mt-8">
+        <!-- Flash Messages Display -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="w-full max-w-3xl mx-auto mb-6">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container text-center text-sm">
+            &copy; {{ current_year }} Online Medical Management System. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Font Awesome for Icons (Optional, but useful) -->
+    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css)">
+    <script>
+        // Simple script for current year in footer if not using Flask-Moment or similar
+        function moment() {
+            return {
+                format: function(str) {
+                    if (str === 'YYYY') {
+                        return new Date().getFullYear();
+                    }
+                    return '';
+                }
+            };
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!-- templates/admin_add_user.html -->
+{% extends "base.html" %}
+{% block title %}Add New User{% endblock %}
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-xl mb-8 max-w-2xl mx-auto">
+    <h1 class="text-4xl font-bold text-blue-800 mb-6 flex items-center">
+        <i class="fas fa-user-plus mr-4 text-blue-500"></i> Add New User
+    </h1>
+    <p class="text-gray-700 text-lg mb-8">Create new user accounts with specific roles and initial details.</p>
+
+    <form method="POST" class="space-y-6" id="add-user-form">
+        <div class="form-group">
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <input type="text" id="username" name="username"
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                   required>
+        </div>
+        <div class="form-group">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" id="email" name="email"
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                   required>
+        </div>
+        <div class="form-group">
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" id="password" name="password"
+                   class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                   required>
+        </div>
+        <div class="form-group">
+            <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <select id="role" name="role"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    required onchange="toggleRoleSpecificFields()">
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+
+        <div id="patient-fields" class="space-y-6 border-t pt-6 mt-6 border-gray-200">
+            <h2 class="text-xl font-semibold text-blue-700">Patient Details</h2>
+            <div class="form-group">
+                <label for="patient_full_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input type="text" id="patient_full_name" name="full_name"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div class="form-group">
+                <label for="date_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                <input type="date" id="date_of_birth" name="date_of_birth"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div class="form-group">
+                <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <select id="gender" name="gender"
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="patient_contact_number" class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                <input type="tel" id="patient_contact_number" name="contact_number"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div class="form-group">
+                <label for="patient_address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <textarea id="patient_address" name="address" rows="3"
+                          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="insurance_info" class="block text-sm font-medium text-gray-700 mb-1">Insurance Details</label>
+                <textarea id="insurance_info" name="insurance_info" rows="3"
+                          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+            </div>
+        </div>
+
+        <div id="doctor-fields" class="space-y-6 border-t pt-6 mt-6 border-gray-200 hidden">
+            <h2 class="text-xl font-semibold text-blue-700">Doctor Details</h2>
+            <div class="form-group">
+                <label for="doctor_full_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input type="text" id="doctor_full_name" name="full_name"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div class="form-group">
+                <label for="specialty" class="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
+                <input type="text" id="specialty" name="specialty"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div class="form-group">
+                <label for="doctor_contact_number" class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                <input type="tel" id="doctor_contact_number" name="contact_number"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div class="form-group">
+                <label for="clinic_address" class="block text-sm font-medium text-gray-700 mb-1">Clinic Address</label>
+                <textarea id="clinic_address" name="clinic_address" rows="3"
+                          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+            </div>
+        </div>
+
+        <button type="submit"
+                class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+            Add User
+        </button>
+    </form>
+</div>
+
+<script>
+    // Function to toggle visibility of role-specific fields
+    function toggleRoleSpecificFields() {
+        const roleSelect = document.getElementById('role');
+        const patientFields = document.getElementById('patient-fields');
+        const doctorFields = document.getElementById('doctor-fields');
+        const selectedRole = roleSelect.value;
+
+        // Hide all fields initially
+        patientFields.classList.add('hidden');
+        doctorFields.classList.add('hidden');
+
+        // Show fields based on selected role
+        if (selectedRole === 'patient') {
+            patientFields.classList.remove('hidden');
+            // Ensure full_name input for patient has the name 'full_name'
+            document.getElementById('patient_full_name').name = 'full_name';
+            document.getElementById('doctor_full_name').name = 'unused_full_name_doctor'; // Change name to avoid conflict
+            document.getElementById('patient_contact_number').name = 'contact_number';
+            document.getElementById('doctor_contact_number').name = 'unused_contact_number_doctor'; // Change name to avoid conflict
+
+        } else if (selectedRole === 'doctor') {
+            doctorFields.classList.remove('hidden');
+            // Ensure full_name input for doctor has the name 'full_name'
+            document.getElementById('doctor_full_name').name = 'full_name';
+            document.getElementById('patient_full_name').name = 'unused_full_name_patient'; // Change name to avoid conflict
+            document.getElementById('doctor_contact_number').name = 'contact_number';
+            document.getElementById('patient_contact_number').name = 'unused_contact_number_patient'; // Change name to avoid conflict
+
+        }
+        // Admin role has no specific fields beyond username, email, password
+    }
+
+    // Call on page load to set initial state
+    document.addEventListener('DOMContentLoaded', toggleRoleSpecificFields);
+</script>
+{% endblock %}

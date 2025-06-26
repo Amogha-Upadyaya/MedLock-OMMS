@@ -1,0 +1,49 @@
+<!-- templates/add_edit_medical_record.html -->
+{% extends "base.html" %}
+
+{% block title %}{% if record %}Edit{% else %}Add{% endif %} Medical Record{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center py-8">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h2 class="text-3xl font-bold text-center text-blue-700 mb-6">
+            {% if record %}Edit Medical Record{% else %}Add New Medical Record{% endif %} for {{ patient_user.username }}
+        </h2>
+        <form method="POST" action="{% if record %}{{ url_for('add_edit_medical_record', patient_id=patient_user.id, record_id=record.id) }}{% else %}{{ url_for('add_edit_medical_record', patient_id=patient_user.id) }}{% endif %}">
+            <div class="mb-4">
+                <label for="record_date" class="block text-gray-700 text-sm font-bold mb-2">Record Date:</label>
+                <input type="date" id="record_date" name="record_date" required
+                       value="{{ record.record_date.isoformat() if record else today }}"
+                       class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+            </div>
+            <div class="mb-4">
+                <label for="diagnosis" class="block text-gray-700 text-sm font-bold mb-2">Diagnosis:</label>
+                <textarea id="diagnosis" name="diagnosis" rows="3" required
+                          class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder="e.g., Common cold, Hypertension, Diabetes Type 2">{{ record.diagnosis if record else '' }}</textarea>
+            </div>
+            <div class="mb-4">
+                <label for="treatment_notes" class="block text-gray-700 text-sm font-bold mb-2">Treatment Notes (SOAP notes):</label>
+                <textarea id="treatment_notes" name="treatment_notes" rows="6"
+                          class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder="Subjective, Objective, Assessment, Plan">{{ record.treatment_notes if record else '' }}</textarea>
+            </div>
+            <div class="mb-6">
+                <label for="lab_results" class="block text-gray-700 text-sm font-bold mb-2">Lab Results / Notes (e.g., links to mock PDFs):</label>
+                <textarea id="lab_results" name="lab_results" rows="3"
+                          class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                          placeholder="e.g., Blood test normal, X-ray clear, link to [drive.google.com/lab_results.pdf](https://drive.google.com/lab_results.pdf)">{{ record.lab_results if record else '' }}</textarea>
+            </div>
+            <div class="flex items-center justify-between">
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-105">
+                    {% if record %}Update Record{% else %}Add Record{% endif %}
+                </button>
+                <a href="{{ url_for('doctor_view_patient_records', patient_id=patient_user.id) }}" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+<!-- templates/issue_prescription.html -->
+{% extends "base.html" %}
+
+{% block title %}Issue Prescription{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center py-8">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+        <h2 class="text-3xl font-bold text-center text-green-700 mb-6">Issue Prescription for {{ patient_user.username }}</h2>
+        <form method="POST" action="{{ url_for('issue_prescription', patient_id=patient_user.id) }}">
+            <div class="mb-4">
+                <label for="medication" class="block text-gray-700 text-sm font-bold mb-2">Medication Name:</label>
+                <input type="text" id="medication" name="medication" required
+                       class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                       placeholder="e.g., Amoxicillin">
+            </div>
+            <div class="mb-4">
+                <label for="dosage" class="block text-gray-700 text-sm font-bold mb-2">Dosage:</label>
+                <input type="text" id="dosage" name="dosage" required
+                       class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                       placeholder="e.g., 250mg, 1 tablet daily">
+            </div>
+            <div class="mb-4">
+                <label for="instructions" class="block text-gray-700 text-sm font-bold mb-2">Instructions (Optional):</label>
+                <textarea id="instructions" name="instructions" rows="4"
+                          class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                          placeholder="e.g., Take with food, Finish the entire course..."></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="issue_date" class="block text-gray-700 text-sm font-bold mb-2">Issue Date:</label>
+                <input type="date" id="issue_date" name="issue_date" required
+                       value="{{ today }}"
+                       class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200">
+            </div>
+            <div class="mb-6">
+                <label for="expiry_date" class="block text-gray-700 text-sm font-bold mb-2">Expiry Date (Optional):</label>
+                <input type="date" id="expiry_date" name="expiry_date"
+                       class="shadow-sm appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200">
+            </div>
+            <div class="flex items-center justify-between">
+                <button type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:shadow-outline transition-all duration-200 transform hover:scale-105">
+                    Issue Prescription
+                </button>
+                <a href="{{ url_for('doctor_view_patient_records', patient_id=patient_user.id) }}" class="inline-block align-baseline font-bold text-sm text-gray-600 hover:text-gray-800">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

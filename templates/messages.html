@@ -1,0 +1,28 @@
+<!-- templates/messages.html -->
+{% extends "base.html" %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-xl mb-8 text-center">
+    <h1 class="text-4xl font-bold text-blue-800 mb-4 flex items-center justify-center">
+        <i class="fas fa-envelope-open-text mr-4 text-blue-500"></i> Secure Messaging
+    </h1>
+    <p class="text-gray-700 text-lg mb-6">
+        This feature is under active development and will provide a secure channel for communication within the system.
+    </p>
+    <div class="bg-yellow-50 p-6 rounded-lg shadow-md border border-yellow-200 max-w-xl mx-auto">
+        <p class="text-yellow-800 font-semibold mb-3">
+            <i class="fas fa-exclamation-triangle mr-2"></i> Future Enhancement!
+        </p>
+        <p class="text-gray-700">
+            In a complete system, this section would feature real-time chat, message history, and notifications for patients, doctors, and admin staff, ensuring confidential and efficient communication.
+        </p>
+    </div>
+    <div class="mt-8">
+        <a href="{{ url_for('dashboard') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md shadow-lg transition-all duration-300 transform hover:scale-105">
+            Go to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

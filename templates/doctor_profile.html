@@ -1,0 +1,74 @@
+<!-- templates/doctor_profile.html -->
+{% extends "base.html" %}
+{% block title %}
+    {% if user %}
+        {{ user.username }}'s Profile
+    {% else %}
+        My Doctor Profile
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-xl mb-8 max-w-2xl mx-auto">
+    <h1 class="text-4xl font-bold text-blue-800 mb-6 flex items-center">
+        <i class="fas fa-user-md mr-4 text-blue-500"></i>
+        {% if user %}
+            {{ user.username }}'s Doctor Profile
+        {% else %}
+            My Doctor Profile
+        {% endif %}
+    </h1>
+    <p class="text-gray-700 text-lg mb-8">
+        Manage your professional and contact information.
+    </p>
+
+    {# Determine the correct form action URL #}
+    {% set form_action_url %}
+        {% if user %} {# If 'user' object is passed, it means admin is editing this user's profile #}
+            {{ url_for('admin_edit_doctor', doctor_id=info.id) }} {# CORRECTED: Use info.id (DoctorInfo ID) #}
+        {% else %} {# Otherwise, it's the doctor editing their own profile #}
+            {{ url_for('doctor_profile') }}
+        {% endif %}
+    {% endset %}
+
+    <form method="POST" class="space-y-6" action="{{ form_action_url }}">
+        {# Determine the actual user info to display based on context #}
+        {% set display_user_info = info if info else current_user.doctor_info %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-group">
+                <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input type="text" id="full_name" name="full_name"
+                       value="{{ display_user_info.full_name if display_user_info and display_user_info.full_name else '' }}"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="specialty" class="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
+                <input type="text" id="specialty" name="specialty"
+                       value="{{ display_user_info.specialty if display_user_info and display_user_info.specialty else '' }}"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <div class="form-group">
+                <label for="contact_number" class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                <input type="tel" id="contact_number" name="contact_number"
+                       value="{{ display_user_info.contact_number if display_user_info and display_user_info.contact_number else '' }}"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <div class="form-group col-span-1 md:col-span-2">
+                <label for="clinic_address" class="block text-sm font-medium text-gray-700 mb-1">Clinic Address</label>
+                <textarea id="clinic_address" name="clinic_address" rows="3"
+                          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ display_user_info.clinic_address if display_user_info and display_user_info.clinic_address else '' }}</textarea>
+            </div>
+        </div>
+
+        <button type="submit"
+                class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+            Update Profile
+        </button>
+    </form>
+</div>
+{% endblock %}

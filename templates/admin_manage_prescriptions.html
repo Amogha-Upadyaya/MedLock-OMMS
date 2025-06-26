@@ -1,0 +1,50 @@
+<!-- templates/admin_manage_prescriptions.html -->
+{% extends "base.html" %}
+{% block title %}Manage Prescriptions{% endblock %}
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-xl mb-8">
+    <h1 class="text-4xl font-bold text-blue-800 mb-4 flex items-center">
+        <i class="fas fa-file-prescription mr-4 text-blue-500"></i> All Prescriptions
+    </h1>
+    <p class="text-gray-700 text-lg mb-6">Review all issued prescriptions across the system.</p>
+
+    {% if prescriptions %}
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+            <thead class="bg-gray-100 border-b border-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Medication</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Dosage</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Instructions</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Issue Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Expiry Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Patient</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Doctor</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for rx in prescriptions %}
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ rx.id }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ rx.medication }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ rx.dosage }}</td>
+                    <td class="px-6 py-4 text-sm text-gray-800">{{ rx.instructions if rx.instructions else 'N/A' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ rx.issue_date.strftime('%Y-%m-%d') }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ rx.expiry_date.strftime('%Y-%m-%d') if rx.expiry_date else 'N/A' }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                        <a href="{{ url_for('doctor_view_patient_records', patient_id=rx.patient_id) }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                            {{ rx.patient_name }}
+                        </a>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ rx.doctor_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-gray-600">No prescriptions found in the system.</p>
+    {% endif %}
+</div>
+{% endblock %}

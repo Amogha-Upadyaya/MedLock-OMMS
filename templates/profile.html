@@ -1,0 +1,106 @@
+<!-- templates/profile.html -->
+{% extends "base.html" %}
+{% block title %}
+    {% if user %}
+        {{ user.username }}'s Profile
+    {% else %}
+        My Profile
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-xl mb-8 max-w-2xl mx-auto">
+    <h1 class="text-4xl font-bold text-blue-800 mb-6 flex items-center">
+        <i class="fas fa-user-circle mr-4 text-blue-500"></i>
+        {% if user %}
+            {{ user.username }}'s Profile ({{ user.role | capitalize }})
+        {% else %}
+            My Profile
+        {% endif %}
+    </h1>
+    <p class="text-gray-700 text-lg mb-8">
+        {% if user and user.role == 'patient' %}
+            View and update patient details.
+        {% elif user and user.role == 'doctor' %}
+            View and update doctor details.
+        {% else %}
+            Manage your personal information.
+        {% endif %}
+    </p>
+
+    <form method="POST" class="space-y-6">
+        {# Determine the actual user and info objects to use based on context #}
+        {% set display_user = user if user else current_user %}
+        {% set display_info = info if info else (current_user.patient_info if current_user.role == 'patient' else current_user.doctor_info) %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-group">
+                <label for="full_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input type="text" id="full_name" name="full_name"
+                       value="{{ display_info.full_name if display_info and display_info.full_name else '' }}"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                       required>
+            </div>
+
+            {% if display_user.role == 'patient' %}
+            <div class="form-group">
+                <label for="date_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                <input type="date" id="date_of_birth" name="date_of_birth"
+                       value="{{ display_info.date_of_birth.strftime('%Y-%m-%d') if display_info and display_info.date_of_birth else '' }}"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <div class="form-group">
+                <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <select id="gender" name="gender"
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <option value="">Select Gender</option>
+                    <option value="Male" {% if display_info and display_info.gender == 'Male' %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if display_info and display_info.gender == 'Female' %}selected{% endif %}>Female</option>
+                    <option value="Other" {% if display_info and display_info.gender == 'Other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+
+            {% endif %} {# End patient-specific fields #}
+
+            <div class="form-group">
+                <label for="contact_number" class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+                <input type="tel" id="contact_number" name="contact_number"
+                       value="{{ display_info.contact_number if display_info and display_info.contact_number else '' }}"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+
+            <div class="form-group col-span-1 md:col-span-2">
+                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <textarea id="address" name="address" rows="3"
+                          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ display_info.address if display_info and display_info.address else '' }}</textarea>
+            </div>
+
+            {% if display_user.role == 'patient' %}
+            <div class="form-group col-span-1 md:col-span-2">
+                <label for="insurance_info" class="block text-sm font-medium text-gray-700 mb-1">Insurance Details</label>
+                <textarea id="insurance_info" name="insurance_info" rows="3"
+                          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ display_info.insurance_info if display_info and display_info.insurance_info else '' }}</textarea>
+            </div>
+            {% elif display_user.role == 'doctor' %}
+            <div class="form-group">
+                <label for="specialty" class="block text-sm font-medium text-gray-700 mb-1">Specialty</label>
+                <input type="text" id="specialty" name="specialty"
+                       value="{{ display_info.specialty if display_info and display_info.specialty else '' }}"
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            </div>
+            <div class="form-group col-span-1 md:col-span-2">
+                <label for="clinic_address" class="block text-sm font-medium text-gray-700 mb-1">Clinic Address</label>
+                <textarea id="clinic_address" name="clinic_address" rows="3"
+                          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ display_info.clinic_address if display_info and display_info.clinic_address else '' }}</textarea>
+            </div>
+            {% endif %}
+        </div>
+
+        <button type="submit"
+                class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+            Update Profile
+        </button>
+    </form>
+</div>
+{% endblock %}
